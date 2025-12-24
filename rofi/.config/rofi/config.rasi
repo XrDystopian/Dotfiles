@@ -1,85 +1,205 @@
+/**
+ * Single Config Rofi - Catppuccin Mocha Lavender (Fixed)
+ **/
+
+/*****----- Configuration -----*****/
 configuration {
-  display-drun: "Applications:";
-  display-window: "Windows:";
-  drun-display-format: "{icon} {name}";
-  font: "JetBrainsMono Nerd Font Medium 10";
-  modi: "window,run,drun";
-  show-icons: true;
-  icon-theme: "Tela Circle Dracula";
+    modi:                       "drun,run,filebrowser,window";
+    show-icons:                 true;
+    display-drun:               " Apps";
+    display-run:                " Run";
+    display-filebrowser:        " Files";
+    display-window:             " Windows";
+    drun-display-format:        "{name}";
+    window-format:              "{w} · {c} · {t}";
+    font:                       "JetBrainsMono Nerd Font Propo 12";
+    icon-theme:                 "Papirus";
+	disable-history:            true;
+	sort:                       false;
 }
 
-@theme "/dev/null"
-
-/* Catppuccin Mocha palette (selected mappings) */
+/*****----- Global Properties (Catppuccin Mocha) -----*****/
 * {
-  bg:        #1e1e2e;   /* base */
-  bg-alt:    #45475a;   /* surface1 */
-  bg-selected: #313244; /* surface0 */
+    /* Mocha Palette */
+    base:        #1e1e2e;
+    mantle:      #181825;
+    crust:       #11111b;
+    text:        #cdd6f4;
+    subtext0:    #a6adc8;
+    surface0:    #313244;
+    surface1:    #45475a;
+    surface2:    #585b70;
+    
+    lavender:    #b4befe;
+    mauve:       #cba6f7;
+    red:         #f38ba8;
+    green:       #a6e3a1;
+    yellow:      #f9e2af;
 
-  fg:        #cdd6f4;   /* text */
-  fg-alt:    #7f849c;   /* overlay1 */
+    /* Functional Colors */
+    background:          @base;
+    background-alt:      @surface0;
+    foreground:          @text;
+    selected:            @lavender;
+    active:              @green;
+    urgent:              @red;
 
-  border: 0;
-  margin: 0;
-  padding: 0;
-  spacing: 0;
+    border-colour:       var(selected);
+    handle-colour:       var(selected);
+    background-colour:   var(background);
+    foreground-colour:   var(foreground);
 }
 
+/*****----- Main Window -----*****/
 window {
-  width: 30%;
-  background-color: @bg;
+    transparency:                "real";
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    width:                       800px;
+    enabled:                     true;
+    margin:                      0px;
+    padding:                     0px;
+    border:                      0px solid;
+    border-radius:               10px;
+    border-color:                @border-colour;
+    cursor:                      "default";
+    background-color:            @background-colour;
 }
 
-element {
-  padding: 8 12;
-  background-color: transparent;
-  text-color: @fg-alt;
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                     true;
+    spacing:                     10px;
+    margin:                      0px;
+    padding:                     20px;
+    border:                      0px solid;
+    background-color:            transparent;
+    children:                    [ "inputbar", "mode-switcher", "message", "listview" ];
 }
 
-element selected {
-  text-color: @fg;
-  background-color: @bg-selected;
+/*****----- Inputbar -----*****/
+inputbar {
+    enabled:                     true;
+    spacing:                     10px;
+    margin:                      0px;
+    padding:                     0px;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+    children:                    [ "textbox-prompt-colon", "entry" ];
 }
 
-element-text {
-  background-color: transparent;
-  text-color: inherit;
-  vertical-align: 0.5;
-}
-
-element-icon {
-  size: 14;
-  padding: 0 10 0 0;
-  background-color: transparent;
+textbox-prompt-colon {
+    enabled:                     true;
+    padding:                     5px 0px;
+    expand:                      false;
+    str:                         "";
+    background-color:            inherit;
+    text-color:                  inherit;
 }
 
 entry {
-  padding: 12;
-  background-color: @bg-alt;
-  text-color: @fg;
+    enabled:                     true;
+    padding:                     5px 0px;
+    background-color:            inherit;
+    text-color:                  inherit;
+    cursor:                      text;
+    placeholder:                 "Search...";
+    placeholder-color:           inherit;
 }
 
-inputbar {
-  children: [prompt, entry];
-  background-color: @bg;
-}
-
+/*****----- Listview -----*****/
 listview {
-  background-color: @bg;
-  columns: 1;
-  lines: 10;
+    enabled:                     true;
+    columns:                     1;
+    lines:                       8;
+    cycle:                       true;
+    dynamic:                     true;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                true;
+    fixed-columns:               true;
+    spacing:                     5px;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+    cursor:                      "default";
 }
 
-mainbox {
-  children: [inputbar, listview];
-  background-color: @bg;
+/*****----- Elements -----*****/
+element {
+    enabled:                     true;
+    spacing:                     10px;
+    margin:                      0px;
+    padding:                     10px;
+    border-radius:               8px;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+    cursor:                      pointer;
 }
 
-prompt {
-  enabled: true;
-  padding: 12 0 0 12;
-  background-color: @bg-alt;
-  text-color: @fg;
+/* Fix: Forces all non-selected rows to have a transparent background */
+element normal.normal,
+element alternate.normal {
+    background-color:            transparent;
+    text-color:                  var(foreground-colour);
 }
 
-/* vim: ft=sass */
+element selected.normal {
+    background-color:            var(selected);
+    text-color:                  var(background-colour);
+}
+
+element-icon {
+    background-color:            transparent;
+    text-color:                  inherit;
+    size:                        24px;
+    cursor:                      inherit;
+}
+
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    highlight:                   inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
+
+/*****----- Mode Switcher -----*****/
+mode-switcher{
+    enabled:                     true;
+    expand:                      false;
+    spacing:                     10px;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+}
+
+button {
+    padding:                     12px;
+    border-radius:               8px;
+    background-color:            @background-alt;
+    text-color:                  inherit;
+    cursor:                      pointer;
+}
+
+button selected {
+    background-color:            var(selected);
+    text-color:                  var(background-colour);
+}
+
+/*****----- Message -----*****/
+message {
+    enabled:                     true;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+}
+
+textbox {
+    padding:                     12px;
+    border-radius:               8px;
+    background-color:            @background-alt;
+    text-color:                  @foreground-colour;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
