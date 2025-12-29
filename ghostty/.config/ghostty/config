@@ -1,0 +1,75 @@
+# --- Theme & Visuals ---
+theme = Catppuccin Mocha
+background-opacity = 0.95
+background-blur-radius = 20
+window-padding-x = 10
+window-padding-y = 10
+window-padding-balance = true
+macos-titlebar-style = tabs
+
+# --- Typography ---
+font-family = "JetBrainsMono Nerd Font"
+font-size = 12
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig
+adjust-cell-height = 20%
+
+# --- Cursor ---
+cursor-style = block
+cursor-style-blink = true
+cursor-opacity = 0.8
+
+# --- Mouse & Selection ---
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+mouse-scroll-multiplier = 0.5
+
+# --- Window Behavior ---
+window-save-state = never
+confirm-close-surface = false
+window-decoration = true
+maximize = true
+title = " "
+
+# --- Shell Integration ---
+shell-integration = zsh
+shell-integration-features = no-cursor,sudo,title
+
+# --- Keybindings ---
+# keybindings
+keybind = ctrl+s>r=reload_config
+keybind = ctrl+s>x=close_surface
+
+keybind = ctrl+s>n=new_window
+
+# tabs 
+keybind = ctrl+s>c=new_tab
+keybind = ctrl+s>shift+l=next_tab
+keybind = ctrl+s>shift+h=previous_tab
+keybind = ctrl+s>comma=move_tab:-1
+keybind = ctrl+s>period=move_tab:1
+
+# quick tab switch
+keybind = ctrl+s>1=goto_tab:1
+keybind = ctrl+s>2=goto_tab:2
+keybind = ctrl+s>3=goto_tab:3
+keybind = ctrl+s>4=goto_tab:4
+keybind = ctrl+s>5=goto_tab:5
+keybind = ctrl+s>6=goto_tab:6
+keybind = ctrl+s>7=goto_tab:7
+keybind = ctrl+s>8=goto_tab:8
+keybind = ctrl+s>9=goto_tab:9
+
+# split
+keybind = ctrl+s>\=new_split:right
+keybind = ctrl+s>-=new_split:down
+
+keybind = ctrl+s>j=goto_split:bottom
+keybind = ctrl+s>k=goto_split:top
+keybind = ctrl+s>h=goto_split:left
+keybind = ctrl+s>l=goto_split:right
+
+keybind = ctrl+s>z=toggle_split_zoom
+
+keybind = ctrl+s>e=equalize_splits

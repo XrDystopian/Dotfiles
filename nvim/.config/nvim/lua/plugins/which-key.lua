@@ -1,69 +1,86 @@
--- NOTE: Plugins can also be configured to run Lua code when they are loaded.
---
--- This is often very useful to both group configuration, as well as handle
--- lazy loading plugins that don't need to be loaded immediately at startup.
---
--- For example, in the following configuration, we use:
---  event = 'VimEnter'
---
--- which loads which-key before all the UI elements are loaded. Events can be
--- normal autocommands events (`:help autocmd-events`).
---
--- Then, because we use the `opts` key (recommended), the configuration runs
--- after the plugin has been loaded as `require(MODULE).setup(opts)`.
-
 return {
-  { -- Useful plugin to show you pending keybinds.
-    'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
-    opts = {
-      -- delay between pressing a key and opening which-key (milliseconds)
-      -- this setting is independent of vim.o.timeoutlen
-      delay = 0,
-      icons = {
-        -- set icon mappings to true if you have a Nerd Font
-        mappings = vim.g.have_nerd_font,
-        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
-        keys = vim.g.have_nerd_font and {} or {
-          Up = '<Up> ',
-          Down = '<Down> ',
-          Left = '<Left> ',
-          Right = '<Right> ',
-          C = '<C-…> ',
-          M = '<M-…> ',
-          D = '<D-…> ',
-          S = '<S-…> ',
-          CR = '<CR> ',
-          Esc = '<Esc> ',
-          ScrollWheelDown = '<ScrollWheelDown> ',
-          ScrollWheelUp = '<ScrollWheelUp> ',
-          NL = '<NL> ',
-          BS = '<BS> ',
-          Space = '<Space> ',
-          Tab = '<Tab> ',
-          F1 = '<F1>',
-          F2 = '<F2>',
-          F3 = '<F3>',
-          F4 = '<F4>',
-          F5 = '<F5>',
-          F6 = '<F6>',
-          F7 = '<F7>',
-          F8 = '<F8>',
-          F9 = '<F9>',
-          F10 = '<F10>',
-          F11 = '<F11>',
-          F12 = '<F12>',
-        },
-      },
+	{
+		"folke/which-key.nvim",
+		event = "VimEnter",
+		opts = {
+			-- 'classic', 'modern', or 'helix'
+			preset = "modern",
+			-- Delay before showing the popup.
+			-- 0 for plugins (like marks), 200ms for regular keymaps
+			delay = function(ctx)
+				return ctx.plugin and 0 or 200
+			end,
 
-      -- Document existing key chains
-      spec = {
-        { '<leader>s', group = '[S]earch' },
-        { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-      },
-    },
-  },
+			icons = {
+				mappings = vim.g.have_nerd_font,
+				-- If using Nerd Font, these icons will represent the physical keys
+				keys = vim.g.have_nerd_font and {} or {
+					Up = "<Up> ",
+					Down = "<Down> ",
+					Left = "<Left> ",
+					Right = "<Right> ",
+					C = "<C-…> ",
+					M = "<M-…> ",
+					D = "<D-…> ",
+					S = "<S-…> ",
+					CR = "<CR> ",
+					Esc = "<Esc> ",
+					ScrollWheelDown = "<ScrollWheelDown> ",
+					ScrollWheelUp = "<ScrollWheelUp> ",
+					NL = "<NL> ",
+					BS = "<BS> ",
+					Space = "<Space> ",
+					Tab = "<Tab> ",
+				},
+			},
+
+			-- Built-in plugins to help with Neovim primitives
+			plugins = {
+				marks = true, -- shows a list of your marks on ' and `
+				registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT
+				spelling = {
+					enabled = true, -- z= will show suggestions in which-key
+					suggestions = 20,
+				},
+				presets = {
+					operators = true, -- help for d, y, etc.
+					motions = true, -- help for motions
+					text_objects = true, -- help for objects like i(, at, etc.
+					windows = true, -- <c-w> window bindings
+					nav = true, -- misc window navigation
+					z = true, -- fold/spell bindings
+					g = true, -- common g-prefixed bindings
+				},
+			},
+
+			-- Window styling
+			win = {
+				border = "single", -- none, single, double, shadow
+				padding = { 1, 2 }, -- [top/bottom, right/left]
+				title = true,
+				title_pos = "center",
+			},
+
+			-- Document your custom key chains
+			spec = {
+				{ "<leader>c", group = "[C]ode", mode = { "n", "x" } },
+				{ "<leader>d", group = "[D]ocument" },
+				{ "<leader>g", group = "[G]it" },
+				{ "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
+				{ "<leader>r", group = "[R]ename" },
+				{ "<leader>s", group = "[S]earch" },
+				{ "<leader>t", group = "[T]oggle" },
+				{ "<leader>w", group = "[W]orkspace" },
+			},
+		},
+		keys = {
+			{
+				"<leader>?",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
+			},
+		},
+	},
 }
--- vim: ts=2 sts=2 sw=2 et
