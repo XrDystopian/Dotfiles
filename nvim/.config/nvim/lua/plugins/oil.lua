@@ -4,7 +4,7 @@ return {
 	config = function()
 		require("oil").setup({
 			default_file_explorer = false, -- start up nvim with oil instead of netrw
-			columns = {},
+			columns = { "icon" },
 			keymaps = {
 				["<C-h>"] = false,
 				["<C-c>"] = false, -- prevent from closing Oil as <C-c> is esc key

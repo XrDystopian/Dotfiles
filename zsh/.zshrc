@@ -35,6 +35,13 @@ alias lvim='NVIM_APPNAME="nvim-lazy" nvim'
 alias cvim='NVIM_APPNAME="nvim-chad" nvim'
 alias svim='NVIM_APPNAME="nvim-seth" nvim'
 
+# --- Shortcuts/ QoL ---
+chpwd() {
+    if [[ "$PWD" != "$HOME" ]]; then
+        ls
+    fi
+}
+
 # --- Tools ---
 eval "$(atuin init zsh --disable-up-arrow)"
 eval "$(zoxide init zsh)"

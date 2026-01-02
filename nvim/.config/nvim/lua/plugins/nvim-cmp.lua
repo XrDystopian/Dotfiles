@@ -17,6 +17,8 @@ return {
 	config = function()
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
+		local lspkind = require("lspkind")
+		local tailwind_formatter = require("tailwindcss-colorizer-cmp").formatter
 
 		local kind_icons = {
 			Class = "",
@@ -46,9 +48,26 @@ return {
 			Variable = "",
 		}
 
+		-- ENHANCEMENT: Smart Confirm Logic
+		local confirm = function(entry)
+			local behavior = cmp.ConfirmBehavior.Replace
+			if entry then
+				local completion_item = entry.completion_item
+				local newText = completion_item.textEdit and completion_item.textEdit.newText
+					or completion_item.insertText
+					or completion_item.label
+					or ""
+
+				local diff_after = math.max(0, entry.replace_range["end"].character + 1) - entry.context.cursor.col
+				if entry.context.cursor_after_line:sub(1, diff_after) ~= newText:sub(-diff_after) then
+					behavior = cmp.ConfirmBehavior.Insert
+				end
+			end
+			cmp.confirm({ select = true, behavior = behavior })
+		end
+
 		require("luasnip.loaders.from_vscode").lazy_load()
 
-		-- Cmdline Setup (Outside main setup to ensure it works)
 		cmp.setup.cmdline("/", {
 			mapping = cmp.mapping.preset.cmdline(),
 			sources = { { name = "buffer" } },
@@ -59,7 +78,9 @@ return {
 			sources = cmp.config.sources({
 				{ name = "path" },
 			}, {
+				-- ENHANCEMENT: Also search buffer in cmdline for faster commands
 				{ name = "cmdline", option = { ignore_cmds = { "Man", "!" } } },
+				{ name = "buffer", option = { max_item_count = 5 } },
 			}),
 		})
 
@@ -69,15 +90,12 @@ return {
 					luasnip.lsp_expand(args.body)
 				end,
 			},
-			-- Matches your ghost_text = { enabled = false }
 			experimental = { ghost_text = false },
 			window = {
 				completion = {
-					-- Matches your winhighlight and scrollbar logic
 					border = "rounded",
 					scrollbar = true,
 					winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
-					-- Blink's "padding = 1" equivalent for CMP
 					side_padding = 1,
 				},
 				documentation = {
@@ -91,7 +109,14 @@ return {
 				["<C-f>"] = cmp.mapping.scroll_docs(4),
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-e>"] = cmp.mapping.abort(),
-				["<CR>"] = cmp.mapping.confirm({ select = true }),
+				-- ENHANCEMENT: Use our smart confirm function
+				["<CR>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						confirm(cmp.get_selected_entry())
+					else
+						fallback()
+					end
+				end),
 				["<Tab>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item()
@@ -105,37 +130,36 @@ return {
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp" },
 				{ name = "luasnip" },
-				{ name = "buffer" },
+				{ name = "buffer", keyword_length = 3 },
 				{ name = "path" },
+				-- ENHANCEMENT: Spell check for Markdown/Text
+				{ name = "spell", option = { keep_all_entries = false } },
 			}),
 			formatting = {
-				-- Ordering the fields to match: { Icon } { Label } { Kind Text } { Source }
-				fields = { "kind", "abbr", "menu" },
+				fields = { "abbr", "kind", "menu" },
 				format = function(entry, vim_item)
-					-- 1. Icon (kind_icon)
-					local icon = kind_icons[vim_item.kind] or " "
+					-- 1. Get base icons
+					local icon = kind_icons[vim_item.kind] or ""
+					vim_item.kind = string.format("%s %s", icon, vim_item.kind)
 
-					-- 2. Source Name (matching the text = function(ctx) from your snippet)
-					local source_name = ({
+					-- 2. Source Names
+					vim_item.menu = ({
 						nvim_lsp = "[LSP]",
-						luasnip = "[Snippets]",
+						luasnip = "[Snippet]",
 						buffer = "[Buffer]",
 						path = "[Path]",
-						cmdline = "[CMDLine]",
-					})[entry.source.name] or string.format("(%s)", entry.source.name)
+						spell = "[Spell]",
+					})[entry.source.name] or string.format("[%s]", entry.source.name)
 
-					-- 3. Combine Kind Text and Source for the right-hand side
-					-- This replicates: { 'kind' }, { 'source_name' }
-					vim_item.menu = string.format("%-10s %s", vim_item.kind, source_name)
-					vim_item.kind = icon
-
-					-- Matches width = { min = 15 } for label
+					-- 3. Alignment
 					local label = vim_item.abbr
-					if #label < 15 then
-						vim_item.abbr = label .. string.rep(" ", 15 - #label)
+					if #label < 25 then
+						vim_item.abbr = label .. string.rep(" ", 25 - #label)
 					end
+					vim_item.menu_hl_group = "Comment"
 
-					return vim_item
+					-- 4. ENHANCEMENT: Apply Tailwind Colorizer
+					return tailwind_formatter(entry, vim_item)
 				end,
 			},
 		})
