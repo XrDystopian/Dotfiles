@@ -31,9 +31,8 @@ alias y="yazi"
 alias seanime="./Seanime/seanime"
 alias clr="clear"
 alias kvim='NVIM_APPNAME="nvim-kickstart" nvim'
-alias lvim='NVIM_APPNAME="nvim-lazy" nvim'
-alias cvim='NVIM_APPNAME="nvim-chad" nvim'
 alias svim='NVIM_APPNAME="nvim-seth" nvim'
+alias surge='/opt/surge/surge'
 
 # --- Shortcuts/ QoL ---
 chpwd() {
@@ -67,3 +66,4 @@ zinit ice as"command" from"gh-r" \
 zinit light starship/starship
 
 export PATH=$PATH:/home/XrDystopian/.spicetify
+. "/home/XrDystopian/.deno/env"

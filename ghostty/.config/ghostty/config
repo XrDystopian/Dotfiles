@@ -1,3 +1,5 @@
+gtk-custom-css = tab-style.css
+
 # --- Theme & Visuals ---
 theme = Catppuccin Mocha
 background-opacity = 0.95
