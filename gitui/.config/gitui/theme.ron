@@ -19,5 +19,6 @@
     push_gauge_bg: Some("#89b4fa"),
     push_gauge_fg: Some("#1e1e2e"),
     tag_fg: Some("#f5e0dc"),
-    branch_fg: Some("#94e2d5")
+    branch_fg: Some("#94e2d5"),
+	syntax: Some("Catppuccin Mocha")
 )
