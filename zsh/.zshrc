@@ -33,6 +33,7 @@ alias clr="clear"
 alias kvim='NVIM_APPNAME="nvim-kickstart" nvim'
 alias svim='NVIM_APPNAME="nvim-seth" nvim'
 alias surge='/opt/surge/surge'
+alias knime='GDK_BACKEND=x11 /opt/knime/knime'
 
 # --- Shortcuts/ QoL ---
 chpwd() {
