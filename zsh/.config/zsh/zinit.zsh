@@ -7,11 +7,15 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+# --- Completion system (must init before fzf-tab) ---
+autoload -Uz compinit
+compinit
+
 # --- Plugins ---
 zinit light zdharma-continuum/fast-syntax-highlighting
+zinit light Aloxaf/fzf-tab 
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
-zinit light Aloxaf/fzf-tab     # tab-completion menus rendered through fzf
 
 # --- Prompt (Starship via Zinit) ---
 zinit ice as"command" from"gh-r" \
